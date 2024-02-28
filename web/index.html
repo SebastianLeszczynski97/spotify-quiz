@@ -17,41 +17,54 @@
 <body class="container">
 
     <div class="row mt-4 g-4">
+        <div class="col-4">
+            <div class="row">
+                <h1 class="mb-2 mt-4">Get Songs!</h1>
+                <form hx-post="/get-playlist-songs/" hx-target="#track-list">
+                    <button type="submit" class="btn btn-primary col-2">
+                        Click me
+                    </button>
+                </form>
+            </div>
+
+            <div class="col">
+                <h1 class="mb-2 mt-4">Songs:</h1>
+                <ul class="list-group fs-5 me-5" id="track-list">
+                    {{ range .Tracks }}
+                    <li class="list-group-item bg-primary text-white">{{ .Album.ReleaseDate }} {{ .Name }}</li>
+                    {{ end }}
+                </ul>
+            </div>
+        </div>
+
         <div class="col-8">
-            <h1 class="mb-4">Cat Facts:</h1>
-            <ul class="list-group fs-5 me-5" id="cat-fact-list">
-                {{ range .CatFacts }}
-                <li class="list-group-item bg-primary text-white">{{ .Fact}}</li>
-                {{ end }}
-            </ul>
+            <div class="row">
+                <h1 class="mb-2 mt-4">Add Your Playlist</h1>
+                <form hx-post="/set-playlist/" hx-swap="none">
+                    <div class="mb-2">
+                        <label for="playlist-link">Playlist</label>
+                        <input type="text" name="input-playlist" id="playlist-link" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary col-2">
+                        Submit
+                    </button>
+                </form>
+            </div>
+    
+            <div class="row">
+                <h1 class="mb-2 mt-4">Add Token</h1>
+                <form hx-post="/set-token/" hx-swap="none">
+                    <div class="mb-2">
+                        <label for="set-token">Playlist</label>
+                        <input type="text" name="input-token" id="set-token" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary col-2">
+                        Submit
+                    </button>
+                </form>
+            </div>
         </div>
-
-        <div class="col-4">
-            <h1 class="mb-4">Add Your Playlist</h1>
-            <form hx-post="/add-playlist/">
-                <div class="mb-2">
-                    <label for="playlist-link">Playlist</label>
-                    <input type="text" name="playlist" id="playlist-link" class="form-control" />
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    Submit
-                </button>
-            </form>
-        </div>
-
-        <div class="col-4">
-            <form hx-post="/show-cat-fact/" hx-target="#cat-fact-list" hx-swap="beforeend">
-                <div class="mb-3">
-                    <label for="playlist-link">Cat Fact Generator</label>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    Generate
-                </button>
-            </form>
-        </div>
-
     </div>
-
 </body>
 
 </html>

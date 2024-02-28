@@ -7,55 +7,88 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	tokenService "github.com/bjedrzejewsk/spotify-quiz/pkg"
 )
 
-type CatFact struct {
-	Fact string
+type Album struct {
+	ReleaseDate string `json:"release_date"`
 }
 
-type UnprocessedCatFact struct {
-	Fact   string `json:"fact"`
-	Length int    `json:"length"`
+type Track struct {
+	//there will be more fields here soon
+	Name  string `json:"name"`
+	Album Album  `json:"album"`
+}
+
+type Item struct {
+	Track Track `json:"track"`
+}
+
+type PlaylistTrucksResponse struct {
+	Items []Item `json:"items"`
 }
 
 func main() {
-	fmt.Println("Go app...")
+	fmt.Println("Go app... http://localhost:8080/")
 
-	h1 := func(w http.ResponseWriter, r *http.Request) {
+	var apiToken string = "placeholder"
+	var playlist string = "2cHhJoYSQtwf20GkTEUJh4"
+
+	initTemplate := func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("../web/index.html"))
-		catFacts := map[string][]CatFact{
-			"CatFacts": {
-				{Fact: "Cats are cool."},
-				{Fact: "Cats eat mice."},
+		tracks := map[string][]Track{
+			"Tracks": {
+				{Name: "Song name placeholder", Album: Album{ReleaseDate: "1997-05-22"}},
+				{Name: "Song name placeholder2", Album: Album{ReleaseDate: "1997-11-11"}},
 			},
 		}
-		tmpl.Execute(w, catFacts)
+		tmpl.Execute(w, tracks)
 	}
 
-	h2 := func(w http.ResponseWriter, r *http.Request) {
-		playlist := r.PostFormValue("playlist")
-		log.Printf(fmt.Sprintf("Playlist added %s", playlist))
+	setPlaylistHandler := func(w http.ResponseWriter, r *http.Request) {
+		playlist = r.PostFormValue("input-playlist")
+		log.Printf(fmt.Sprintf("Playlist added %s", playlist), playlist)
 	}
 
-	h3 := func(w http.ResponseWriter, r *http.Request) {
-		catFact := getCatFact()
-		log.Printf(catFact)
-
-		htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s</li>", catFact)
-		tmpl, _ := template.New("t").Parse(htmlStr)
-		tmpl.Execute(w, tmpl)
+	setTokenHandler := func(w http.ResponseWriter, r *http.Request) {
+		var newTokenValue = r.PostFormValue("input-token")
+		tokenService.SetToken(newTokenValue)
+		log.Printf(fmt.Sprintf("Token provided %s", tokenService.GetToken()), tokenService.GetToken())
 	}
 
-	http.HandleFunc("/", h1)
-	http.HandleFunc("/add-playlist/", h2)
-	http.HandleFunc("/show-cat-fact/", h3)
+	getPlaylistSongsHandler := func(w http.ResponseWriter, r *http.Request) {
+		playlistSongs := getPlaylistSongs(playlist, apiToken)
+		log.Print(playlistSongs)
+		for _, item := range playlistSongs {
+			htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s %s</li>", item.Track.Album.ReleaseDate, item.Track.Name)
+			tmpl, _ := template.New("t").Parse(htmlStr)
+			tmpl.Execute(w, tmpl)
+		}
+	}
+
+	http.HandleFunc("/", initTemplate)
+	http.HandleFunc("/set-playlist/", setPlaylistHandler)
+	http.HandleFunc("/set-token/", setTokenHandler)
+	http.HandleFunc("/get-playlist-songs/", getPlaylistSongsHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
 
-func getCatFact() string {
-	resp, err := http.Get("https://catfact.ninja/fact")
+func getPlaylistSongs(playlist string, token string) []Item {
+	client := &http.Client{}
+	//temporarily
+	filter := "?fields=items%28track%28name%2C+album%28release_date%29%29%29"
+	endpointUrl := fmt.Sprintf("https://api.spotify.com/v1/playlists/%s/tracks/%s", playlist, filter)
+	request, err := http.NewRequest("GET", endpointUrl, nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %v", token))
+	fmt.Print(request.Header)
+	resp, err := client.Do(request)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -65,16 +98,16 @@ func getCatFact() string {
 		log.Fatalln(err)
 	}
 
-	catFact := parseCatFact(body)
-	return catFact
+	response := parseTracks(body)
+	return response
 }
 
-func parseCatFact(body []byte) string {
-	var unpCatFact UnprocessedCatFact
+func parseTracks(body []byte) []Item {
+	var unparsedResponse PlaylistTrucksResponse
 
-	err := json.Unmarshal(body, &unpCatFact)
+	err := json.Unmarshal(body, &unparsedResponse)
 	if err != nil {
 		log.Fatalln("Error parsing JSON:", err)
 	}
-	return unpCatFact.Fact
+	return unparsedResponse.Items
 }

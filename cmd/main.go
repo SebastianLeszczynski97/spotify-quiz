@@ -32,7 +32,6 @@ type PlaylistTrucksResponse struct {
 func main() {
 	fmt.Println("Go app... http://localhost:8080/")
 
-	var apiToken string = "placeholder"
 	var playlist string = "2cHhJoYSQtwf20GkTEUJh4"
 
 	initTemplate := func(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +57,7 @@ func main() {
 	}
 
 	getPlaylistSongsHandler := func(w http.ResponseWriter, r *http.Request) {
-		playlistSongs := getPlaylistSongs(playlist, apiToken)
+		playlistSongs := getPlaylistSongs(playlist, tokenService.GetToken())
 		log.Print(playlistSongs)
 		for _, item := range playlistSongs {
 			htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s %s</li>", item.Track.Album.ReleaseDate, item.Track.Name)

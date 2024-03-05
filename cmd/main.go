@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -57,7 +58,7 @@ func main() {
 	}
 
 	getPlaylistSongsHandler := func(w http.ResponseWriter, r *http.Request) {
-		playlistSongs := getPlaylistSongs(playlist, tokenService.GetToken())
+		playlistSongs := getPlaylistSongs(playlist)
 		log.Print(playlistSongs)
 		for _, item := range playlistSongs {
 			htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s %s</li>", item.Track.Album.ReleaseDate, item.Track.Name)
@@ -66,16 +67,40 @@ func main() {
 		}
 	}
 
+	startPlaybackHandler := func(w http.ResponseWriter, r *http.Request) {
+		startPlaylistPlayback(playlist)
+		log.Print("Started playback")
+	}
+
 	http.HandleFunc("/", initTemplate)
 	http.HandleFunc("/set-playlist/", setPlaylistHandler)
 	http.HandleFunc("/set-token/", setTokenHandler)
 	http.HandleFunc("/get-playlist-songs/", getPlaylistSongsHandler)
+	http.HandleFunc("/start-playback/", startPlaybackHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
 
-func getPlaylistSongs(playlist string, token string) []Item {
+func startPlaylistPlayback(playlist string) []byte {
+	client := &http.Client{}
+	//temporarily
+	endpointUrl := "https://api.spotify.com/v1/me/player/play"
+	//values := map[string]string{"context_uri": fmt.Sprintf("spotify:playlist:%v", playlist), "offset": "{\"position\": 0}"}
+	values := "{\"context_uri\": \"spotify:playlist:5ht7ItJgpBH7W6vJ5BqpPr\",\"offset\": {\"position\": 5},\"position_ms\": 0}"
+	jsonValue, _ := json.Marshal(values)
+	request, err := http.NewRequest("PUT", endpointUrl, bytes.NewBuffer(jsonValue))
+	//request, err := http.NewRequest("PUT", endpointUrl, nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	request.Header.Set("Content-Type", "application/json")
+	responseBody := clientDoRequest(client, request)
+
+	return responseBody
+}
+
+func getPlaylistSongs(playlist string) []Item {
 	client := &http.Client{}
 	//temporarily
 	filter := "?fields=items%28track%28name%2C+album%28release_date%29%29%29"
@@ -84,20 +109,9 @@ func getPlaylistSongs(playlist string, token string) []Item {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	responseBody := clientDoRequest(client, request)
 
-	request.Header.Set("Authorization", fmt.Sprintf("Bearer %v", token))
-	fmt.Print(request.Header)
-	resp, err := client.Do(request)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	response := parseTracks(body)
+	response := parseTracks(responseBody)
 	return response
 }
 
@@ -109,4 +123,17 @@ func parseTracks(body []byte) []Item {
 		log.Fatalln("Error parsing JSON:", err)
 	}
 	return unparsedResponse.Items
+}
+
+func clientDoRequest(client *http.Client, request *http.Request) []byte {
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %v", tokenService.GetToken()))
+	resp, err := client.Do(request)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return responseBody
 }

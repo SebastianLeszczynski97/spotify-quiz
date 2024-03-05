@@ -8,6 +8,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 
 	tokenService "github.com/bjedrzejewsk/spotify-quiz/pkg"
 )
@@ -33,7 +35,8 @@ type PlaylistTrucksResponse struct {
 func main() {
 	fmt.Println("Go app... http://localhost:8080/")
 
-	var playlist string = "2cHhJoYSQtwf20GkTEUJh4"
+	var playlistPlaceholder string = "https://open.spotify.com/playlist/5rn1uqM3yaXf15HBAJEzs4?si=de60d1492ec4484f"
+	var playlist = parsePlaylsitId(playlistPlaceholder)
 
 	initTemplate := func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("../web/index.html"))
@@ -47,7 +50,8 @@ func main() {
 	}
 
 	setPlaylistHandler := func(w http.ResponseWriter, r *http.Request) {
-		playlist = r.PostFormValue("input-playlist")
+		var rawPlaylist = r.PostFormValue("input-playlist")
+		playlist = parsePlaylsitId(rawPlaylist)
 		log.Printf(fmt.Sprintf("Playlist added %s", playlist), playlist)
 	}
 
@@ -123,6 +127,18 @@ func parseTracks(body []byte) []Item {
 		log.Fatalln("Error parsing JSON:", err)
 	}
 	return unparsedResponse.Items
+}
+
+func parsePlaylsitId(playlistLink string) string {
+	playlistUrl, err := url.Parse(playlistLink)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(playlistUrl.Path)
+	fmt.Println(strings.Split(playlistUrl.Path, "/"))
+	t := strings.Split(playlistUrl.Path, "/")
+	var playlistId = t[len(t)-1]
+	return playlistId
 }
 
 func clientDoRequest(client *http.Client, request *http.Request) []byte {

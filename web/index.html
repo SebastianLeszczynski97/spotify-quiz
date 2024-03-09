@@ -17,11 +17,20 @@
 <body class="container">
 
     <div class="row mt-4 g-4">
-        <div class="col-4">
+        <div class="col-6">
             <div class="row">
                 <h1 class="mb-2 mt-4">Get Songs!</h1>
                 <form hx-post="/get-playlist-songs/" hx-target="#track-list">
-                    <button type="submit" class="btn btn-primary col-3">
+                    <button type="submit" class="btn btn-primary col-4">
+                        Click me
+                    </button>
+                </form>
+            </div>
+
+            <div class="row">
+                <h1 class="mb-2 mt-4">Log in</h1>
+                <form hx-post="/auth/login/" hx-target="#track-list">
+                    <button type="submit" class="btn btn-primary col-4">
                         Click me
                     </button>
                 </form>
@@ -30,7 +39,7 @@
             <div class="row">
                 <h1 class="mb-2 mt-4">Play playlist!</h1>
                 <form hx-post="/start-playback/"  hx-swap="none">
-                    <button type="submit" class="btn btn-primary col-3">
+                    <button type="submit" class="btn btn-primary col-4">
                         Click me
                     </button>
                 </form>
@@ -46,15 +55,15 @@
             </div>
         </div>
 
-        <div class="col-8">
+        <div class="col-6">
             <div class="row">
                 <h1 class="mb-2 mt-4">Add Your Playlist</h1>
-                <form hx-post="/set-playlist/" hx-swap="none">
+                <form hx-post="/set-playlist/" hx-swap="">
                     <div class="mb-2">
                         <label for="playlist-link">Playlist</label>
                         <input type="text" name="input-playlist" id="playlist-link" class="form-control" />
                     </div>
-                    <button type="submit" class="btn btn-primary col-2">
+                    <button type="submit" class="btn btn-primary col-4">
                         Submit
                     </button>
                 </form>
@@ -67,7 +76,7 @@
                         <label for="set-token">Playlist</label>
                         <input type="text" name="input-token" id="set-token" class="form-control" />
                     </div>
-                    <button type="submit" class="btn btn-primary col-2">
+                    <button type="submit" class="btn btn-primary col-4">
                         Submit
                     </button>
                 </form>

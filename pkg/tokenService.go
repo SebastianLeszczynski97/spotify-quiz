@@ -1,4 +1,4 @@
-package tokenService
+package pkg
 
 type ApiToken struct {
 	token string

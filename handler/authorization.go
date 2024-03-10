@@ -1,4 +1,4 @@
-package authorization
+package handler
 
 import (
 	"crypto/sha256"
@@ -53,16 +53,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Please log in to Spotify by visiting the following page in your browser:", loginURL)
 }
 
-func getURL(state string) string {
-	return auth.AuthURL(state)
-}
-
-func sha256Hash(input string) string {
-	h := sha256.New()
-	h.Write([]byte(input))
-	return base64.URLEncoding.EncodeToString(h.Sum(nil))
-}
-
 func Callback(w http.ResponseWriter, r *http.Request) {
 	sessionCookie, err := r.Cookie("htssess")
 	if err != nil {
@@ -114,4 +104,14 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 	Client = spotify.NewClient(nil)
 	http.Redirect(w, r, os.Getenv("GO_SERVER_EXTERNAL_URL"), http.StatusSeeOther)
+}
+
+func getURL(state string) string {
+	return auth.AuthURL(state)
+}
+
+func sha256Hash(input string) string {
+	h := sha256.New()
+	h.Write([]byte(input))
+	return base64.URLEncoding.EncodeToString(h.Sum(nil))
 }

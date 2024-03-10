@@ -27,7 +27,6 @@ var (
 
 func Login(w http.ResponseWriter, r *http.Request) {
 
-	http.Redirect(w, r, os.Getenv("GO_SERVER_EXTERNAL_URL")+"/dupa/", http.StatusSeeOther)
 	sessionID := uuid.New().String()
 
 	loginURL := getURL(sha256Hash(sessionID))
@@ -76,8 +75,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
-
-	http.Redirect(w, r, os.Getenv("GO_SERVER_EXTERNAL_URL")+"dupa", http.StatusSeeOther)
+	http.Redirect(w, r, os.Getenv("GO_SERVER_EXTERNAL_URL"), http.StatusSeeOther)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
@@ -103,7 +101,6 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &cookie)
 
 	Client = spotify.NewClient(nil)
-	http.Redirect(w, r, os.Getenv("GO_SERVER_EXTERNAL_URL"), http.StatusSeeOther)
 }
 
 func getURL(state string) string {

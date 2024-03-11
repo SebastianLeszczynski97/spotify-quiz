@@ -3,7 +3,7 @@ package handler
 import (
 	"crypto/sha256"
 	"encoding/base64"
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -46,7 +46,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &cookie)
 	w.Header().Set("HX-Redirect", loginURL)
 
-	fmt.Println("Please log in to Spotify by visiting the following page in your browser:", loginURL)
+	log.Print("Please log in to Spotify by visiting the following page in your browser:", loginURL)
 }
 
 func Callback(w http.ResponseWriter, r *http.Request) {
@@ -67,7 +67,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 
 	Client = auth.NewClient(token)
 	user, err := Client.CurrentUser()
-	fmt.Printf("Logged as user: %s", user.DisplayName)
+	log.Printf("Logged as user: %s", user.DisplayName)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return

@@ -4,19 +4,29 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/zmb3/spotify"
 )
 
 func StartStopPlayback(w http.ResponseWriter, r *http.Request) {
 	log.Print("Playback toggled:")
-	startStopPlayback()
-}
-
-func startStopPlayback() {
-	//The client obj is declared and inicialised in authorization.go
 	state, err := Client.PlayerState()
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	devices, err := Client.PlayerDevices()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if len(devices) != 0 {
+		TogglePlaybackState(state)
+	} else {
+		fmt.Println("No active user's devices found")
+	}
+}
+
+func TogglePlaybackState(state *spotify.PlayerState) {
 	switch state.CurrentlyPlaying.Playing {
 	case true:
 		fmt.Println("Stop playback")

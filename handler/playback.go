@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -48,6 +47,7 @@ func breakIfNoActiveDevices() bool {
 	if err != nil {
 		log.Println(err)
 	}
+
 	if len(devices) == 0 {
 		fmt.Println("No active user's devices found")
 		return true
@@ -58,18 +58,18 @@ func breakIfNoActiveDevices() bool {
 func TogglePlaybackState(state *spotify.PlayerState) {
 	switch state.CurrentlyPlaying.Playing {
 	case true:
-		fmt.Println("Stop playback")
+		log.Print("Stop playback")
 		err := Client.Pause()
 		if err != nil {
 			log.Fatalln(err)
 		}
 	case false:
-		fmt.Println("Start playback")
+		log.Print("Start playback")
 		err := Client.Play()
 		if err != nil {
 			log.Fatalln(err)
 		}
 	default:
-		fmt.Println("Something went wrong: Playback state is neither playing nor paused.")
+		log.Print("Something went wrong: Playback state is neither playing nor paused.")
 	}
 }

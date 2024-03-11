@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -11,7 +10,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Go app... http://localhost:8080/")
+	log.Printf("Go app... http://localhost:8080/")
 
 	initTemplate := func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("../web/index.html"))

@@ -45,6 +45,15 @@
                 </form>
             </div>
 
+            <div class="row">
+                <h1 class="mb-2 mt-4">Play random playlist song!</h1>
+                <form hx-post="random-track-playback"  hx-swap="none">
+                    <button type="submit" class="btn btn-primary col-4">
+                        Click me
+                    </button>
+                </form>
+            </div>
+
             <div class="col">
                 <h1 class="mb-2 mt-4">Songs:</h1>
                 <ul class="list-group fs-5 me-5" id="track-list">

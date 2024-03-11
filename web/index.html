@@ -28,15 +28,6 @@
             </div>
 
             <div class="row">
-                <h1 class="mb-2 mt-4">Log in</h1>
-                <form hx-post="/auth/login/" hx-target="#track-list">
-                    <button type="submit" class="btn btn-primary col-4">
-                        Click me
-                    </button>
-                </form>
-            </div>
-
-            <div class="row">
                 <h1 class="mb-2 mt-4">Play playback!</h1>
                 <form hx-post="/start-playback/"  hx-swap="none">
                     <button type="submit" class="btn btn-primary col-4">
@@ -68,16 +59,12 @@
                     </button>
                 </form>
             </div>
-    
+
             <div class="row">
-                <h1 class="mb-2 mt-4">Add Token</h1>
-                <form hx-post="/set-token/" hx-swap="none">
-                    <div class="mb-2">
-                        <label for="set-token">Playlist</label>
-                        <input type="text" name="input-token" id="set-token" class="form-control" />
-                    </div>
+                <h1 class="mb-2 mt-4">Log in</h1>
+                <form hx-post="/auth/login/" hx-target="#track-list">
                     <button type="submit" class="btn btn-primary col-4">
-                        Submit
+                        Click me
                     </button>
                 </form>
             </div>

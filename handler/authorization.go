@@ -67,7 +67,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 
 	Client = auth.NewClient(token)
 	user, err := Client.CurrentUser()
-	fmt.Printf("Logged into a client with bday on: %s", user.Birthdate)
+	fmt.Printf("Logged as user: %s", user.DisplayName)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return

@@ -8,7 +8,6 @@ import (
 
 	"github.com/bjedrzejewsk/spotify-quiz/handler"
 	"github.com/bjedrzejewsk/spotify-quiz/model"
-	obsoleteTokenService "github.com/bjedrzejewsk/spotify-quiz/pkg"
 )
 
 func main() {
@@ -31,7 +30,6 @@ func main() {
 	http.HandleFunc("/set-playlist/", handler.SetPlaylist)
 	http.HandleFunc("/get-playlist-songs/", handler.GetPlaylistSongs)
 	http.HandleFunc("/start-playback/", handler.StartStopPlayback)
-	http.HandleFunc("/set-token/", obsoleteTokenService.SetTokenHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 

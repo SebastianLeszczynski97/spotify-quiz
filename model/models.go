@@ -37,7 +37,7 @@ func (playlist *Playlist) ParseId() {
 	playlist.Id = t[len(t)-1]
 }
 
-func (playlist *Playlist) ParseTracks(rawTracks *spotify.PlaylistTrackPage) {
+func (playlist *Playlist) ParseTracks(rawTracks *spotify.PlaylistTrackPage) []Track {
 	var tracks []Track
 	for _, item := range rawTracks.Tracks {
 		tracks = append(tracks, Track{
@@ -45,5 +45,9 @@ func (playlist *Playlist) ParseTracks(rawTracks *spotify.PlaylistTrackPage) {
 			Album: Album{ReleaseDate: item.Track.Album.ReleaseDate},
 		})
 	}
+	return tracks
+}
+
+func (playlist *Playlist) SetTracks(tracks []Track) {
 	playlist.Tracks = tracks
 }

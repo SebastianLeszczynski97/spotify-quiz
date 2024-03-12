@@ -28,7 +28,8 @@ func GetPlaylistSongs(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	playlist.ParseTracks(rawTracks)
+	parsedTracks := playlist.ParseTracks(rawTracks)
+	playlist.SetTracks(parsedTracks)
 
 	DisplaySongsTemplete(w)
 }

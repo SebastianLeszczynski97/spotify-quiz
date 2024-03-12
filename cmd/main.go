@@ -29,6 +29,7 @@ func main() {
 	http.HandleFunc("/set-playlist/", handler.SetPlaylist)
 	http.HandleFunc("/get-playlist-songs/", handler.GetPlaylistSongs)
 	http.HandleFunc("/start-playback/", handler.StartStopPlayback)
+	http.HandleFunc("/random-track-playback/", handler.RandomTrackPlayback)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 

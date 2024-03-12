@@ -49,7 +49,7 @@ func breakIfNoActiveDevices() bool {
 	}
 
 	if len(devices) == 0 {
-		fmt.Println("No active user's devices found")
+		log.Print("No active user's devices found")
 		return true
 	}
 	return false

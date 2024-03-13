@@ -15,11 +15,24 @@
 </head>
 
 <body class="container">
-
     <div class="row mt-4 g-4">
+
+        <div class="row">
+            <h1 class="mb-2 mt-4">Add Your Playlist</h1>
+            <form hx-post="/set-playlist/" hx-swap="none">
+                <div class="mb-2">
+                    <label for="playlist-link">Playlist</label>
+                    <input type="text" name="input-playlist" id="playlist-link" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary col-12">
+                    Submit
+                </button>
+            </form>
+        </div>
+
         <div class="col-6">
             <div class="row">
-                <h1 class="mb-2 mt-4">Get Songs!</h1>
+                <h1 class="mb-2 mt-4">Get Playlist Songs!</h1>
                 <form hx-post="/get-playlist-songs/" hx-target="#track-list">
                     <button type="submit" class="btn btn-primary col-4">
                         Click me
@@ -28,17 +41,8 @@
             </div>
 
             <div class="row">
-                <h1 class="mb-2 mt-4">Play playback!</h1>
-                <form hx-post="/start-playback/"  hx-swap="none">
-                    <button type="submit" class="btn btn-primary col-4">
-                        Click me
-                    </button>
-                </form>
-            </div>
-
-            <div class="row">
-                <h1 class="mb-2 mt-4">Play random playlist song!</h1>
-                <form hx-post="random-track-playback"  hx-swap="none">
+                <h1 class="mb-2 mt-4">Get the song info</h1>
+                <form hx-post="/get-current-track-info/" hx-target="#track-list">
                     <button type="submit" class="btn btn-primary col-4">
                         Click me
                     </button>
@@ -59,32 +63,39 @@
 
 
             <div class="col">
-                <h1 class="mb-2 mt-4">Songs:</h1>
+                <h1 class="mb-2 mt-4">Songs/Song info:</h1>
                 <ul class="list-group fs-5 me-5" id="track-list">
                     {{ range .Tracks }}
-                    <li class="list-group-item bg-primary text-white">{{ .Album.ReleaseDate }} {{ .Name }}</li>
+                    <li class="list-group-item bg-primary text-white">{{ .ReleaseDate }} {{ .Name }}</li>
                     {{ end }}
                 </ul>
             </div>
         </div>
 
         <div class="col-6">
-            <div class="row">
-                <h1 class="mb-2 mt-4">Add Your Playlist</h1>
-                <form hx-post="/set-playlist/" hx-swap="none">
-                    <div class="mb-2">
-                        <label for="playlist-link">Playlist</label>
-                        <input type="text" name="input-playlist" id="playlist-link" class="form-control" />
-                    </div>
-                    <button type="submit" class="btn btn-primary col-4">
-                        Submit
-                    </button>
-                </form>
+            <div class="row">    
+                <div class="col">
+                    <h1 class="mb-2 mt-4">Play playback!</h1>
+                    <form hx-post="/start-playback/"  hx-swap="none">
+                        <button type="submit" class="btn btn-primary col-8">
+                            Click me
+                        </button>
+                    </form>
+                </div>
+
+                <div class="col">
+                    <h1 class="mb-2 mt-4">Log in</h1>
+                    <form hx-post="/auth/login/" hx-target="#track-list">
+                        <button type="submit" class="btn btn-primary col-8">
+                            Log in
+                        </button>
+                    </form>
+                </div>
             </div>
 
             <div class="row">
-                <h1 class="mb-2 mt-4">Log in</h1>
-                <form hx-post="/auth/login/" hx-target="#track-list">
+                <h1 class="mb-2 mt-4">Play random playlist song!</h1>
+                <form hx-post="/random-track-playback/"  hx-swap="none">
                     <button type="submit" class="btn btn-primary col-4">
                         Click me
                     </button>

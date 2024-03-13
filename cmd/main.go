@@ -14,10 +14,10 @@ func main() {
 
 	initTemplate := func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("../web/index.html"))
-		tracks := map[string][]model.Track{
+		tracks := map[string][]model.TrackInfo{
 			"Tracks": {
-				{Name: "Song name placeholder", Album: model.Album{ReleaseDate: "1997-05-22"}},
-				{Name: "Song name placeholder2", Album: model.Album{ReleaseDate: "1997-11-11"}},
+				{Name: "Song name placeholder", ReleaseDate: "1997-05-22"},
+				{Name: "Song name placeholder2", ReleaseDate: "1997-11-11"},
 			},
 		}
 		tmpl.Execute(w, tracks)
@@ -31,6 +31,7 @@ func main() {
 	http.HandleFunc("/get-playlist-songs/", handler.GetPlaylistSongs)
 	http.HandleFunc("/start-playback/", handler.StartStopPlayback)
 	http.HandleFunc("/random-track-playback/", handler.RandomTrackPlayback)
+	http.HandleFunc("/get-current-track-info/", handler.GetCurrentTrackInfo)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 

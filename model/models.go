@@ -8,24 +8,18 @@ import (
 	"github.com/zmb3/spotify"
 )
 
-type Album struct {
-	ReleaseDate string `json:"release_date"`
-}
-type Track struct {
-	Name  string `json:"name"`
-	Album Album  `json:"album"`
-}
-type Item struct {
-	Track Track `json:"track"`
-}
-type PlaylistTrucksResponse struct {
-	Items []Item `json:"items"`
+type TrackInfo struct {
+	Name           string
+	ReleaseDate    string
+	MainArtistName string
+	ArtistNames    []string
+	AlbumName      string
 }
 
 type Playlist struct {
 	Url    string
 	Id     string
-	Tracks []Track
+	Tracks []TrackInfo
 }
 
 func (playlist *Playlist) ParseId() {
@@ -37,17 +31,45 @@ func (playlist *Playlist) ParseId() {
 	playlist.Id = t[len(t)-1]
 }
 
-func (playlist *Playlist) ParseTracks(rawTracks *spotify.PlaylistTrackPage) []Track {
-	var tracks []Track
-	for _, item := range rawTracks.Tracks {
-		tracks = append(tracks, Track{
-			Name:  item.Track.Name,
-			Album: Album{ReleaseDate: item.Track.Album.ReleaseDate},
-		})
+func (playlist *Playlist) ParseFullTracks(rawTracks *spotify.PlaylistTrackPage) []TrackInfo {
+	var tracks []TrackInfo
+	for _, fullTrack := range rawTracks.Tracks {
+		track := TrackInfo{}
+		track.ParseFullTrack(&fullTrack.Track)
+		tracks = append(tracks, track)
 	}
+
 	return tracks
 }
 
-func (playlist *Playlist) SetTracks(tracks []Track) {
+func (playlist *Playlist) SetTracks(tracks []TrackInfo) {
 	playlist.Tracks = tracks
+}
+
+func (track *TrackInfo) ParseFullTrack(rawTrack *spotify.FullTrack) {
+	track.Name = rawTrack.Name
+	track.ReleaseDate = rawTrack.Album.ReleaseDate
+	var artists []string
+	for index, astist := range rawTrack.Artists {
+		if index == 0 {
+			track.MainArtistName = astist.Name
+		}
+		artists = append(artists, astist.Name)
+	}
+	track.ArtistNames = artists
+	track.AlbumName = rawTrack.Album.Name
+}
+
+func (track *TrackInfo) ParseFullTrack1(rawTrack *spotify.FullTrack) {
+	track.Name = rawTrack.Name
+	track.ReleaseDate = rawTrack.Album.ReleaseDate
+	var artists []string
+	for index, astist := range rawTrack.Artists {
+		if index == 1 {
+			track.MainArtistName = astist.Name
+		}
+		artists = append(artists, astist.Name)
+	}
+	track.ArtistNames = artists
+	track.AlbumName = rawTrack.Album.Name
 }

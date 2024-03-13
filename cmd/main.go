@@ -24,6 +24,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", initTemplate)
+	http.HandleFunc("/get-playlist-image/", handler.GetPlaylistImage)
 	http.HandleFunc("/auth/login/", handler.Login)
 	http.HandleFunc("/auth/callback/", handler.Callback)
 	http.HandleFunc("/set-playlist/", handler.SetPlaylist)

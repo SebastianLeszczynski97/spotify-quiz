@@ -34,6 +34,22 @@ func GetPlaylistSongs(w http.ResponseWriter, r *http.Request) {
 	DisplaySongsTemplete(w)
 }
 
+func GetPlaylistImage(w http.ResponseWriter, r *http.Request) {
+	fullPlaylist, err := Client.GetPlaylist(spotify.ID(playlist.Id))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	image := playlist.GetImageURL(*fullPlaylist)
+
+	DisplayImageTemplete(w, image)
+}
+
+func DisplayImageTemplete(w http.ResponseWriter, image string) {
+	htmlStr := fmt.Sprintf("<img src=%s></img>", image)
+	tmpl, _ := template.New("t").Parse(htmlStr)
+	tmpl.Execute(w, tmpl)
+}
+
 func DisplaySongsTemplete(w http.ResponseWriter) {
 	for _, item := range playlist.Tracks {
 		htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s %s</li>", item.Album.ReleaseDate, item.Name)

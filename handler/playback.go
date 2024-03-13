@@ -5,8 +5,26 @@ import (
 	"math/rand"
 	"net/http"
 
+	"github.com/bjedrzejewsk/spotify-quiz/model"
+	"github.com/bjedrzejewsk/spotify-quiz/service"
 	"github.com/zmb3/spotify"
 )
+
+func GetCurrentTrackInfo(w http.ResponseWriter, r *http.Request) {
+	log.Print("Getting currently playing song info:")
+	if breakIfNoActiveDevices() {
+		return
+	}
+	currentlyPlaying, err := Client.PlayerCurrentlyPlaying()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	var track model.TrackInfo
+	track.ParseFullTrack(currentlyPlaying.Item)
+	log.Print(track)
+	service.DisplayTrackInfoTemplate(w, track)
+}
 
 func RandomTrackPlayback(w http.ResponseWriter, r *http.Request) {
 	log.Print("Playback toggled:")
@@ -15,7 +33,7 @@ func RandomTrackPlayback(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	if state.CurrentlyPlaying.Playing {
-		TogglePlaybackState(state)
+		togglePlaybackState(state)
 	}
 	if breakIfNoActiveDevices() {
 		return
@@ -39,7 +57,7 @@ func StartStopPlayback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	TogglePlaybackState(state)
+	togglePlaybackState(state)
 }
 
 func breakIfNoActiveDevices() bool {
@@ -55,7 +73,7 @@ func breakIfNoActiveDevices() bool {
 	return false
 }
 
-func TogglePlaybackState(state *spotify.PlayerState) {
+func togglePlaybackState(state *spotify.PlayerState) {
 	switch state.CurrentlyPlaying.Playing {
 	case true:
 		log.Print("Stop playback")

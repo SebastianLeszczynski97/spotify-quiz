@@ -1,12 +1,11 @@
 package handler
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"text/template"
 
 	"github.com/bjedrzejewsk/spotify-quiz/model"
+	"github.com/bjedrzejewsk/spotify-quiz/service"
 	"github.com/zmb3/spotify"
 )
 
@@ -28,16 +27,8 @@ func GetPlaylistSongs(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	parsedTracks := playlist.ParseTracks(rawTracks)
+	parsedTracks := playlist.ParseFullTracks(rawTracks)
 	playlist.SetTracks(parsedTracks)
 
-	DisplaySongsTemplete(w)
-}
-
-func DisplaySongsTemplete(w http.ResponseWriter) {
-	for _, item := range playlist.Tracks {
-		htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s %s</li>", item.Album.ReleaseDate, item.Name)
-		tmpl, _ := template.New("t").Parse(htmlStr)
-		tmpl.Execute(w, tmpl)
-	}
+	service.DisplaySongsTemplate(w, playlist.Tracks)
 }

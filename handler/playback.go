@@ -11,7 +11,7 @@ import (
 )
 
 func GetCurrentTrackInfo(w http.ResponseWriter, r *http.Request) {
-	log.Print("Getting currently playing song info:")
+	log.Println("Getting currently playing song info:")
 	if breakIfNoActiveDevices() {
 		return
 	}
@@ -22,12 +22,12 @@ func GetCurrentTrackInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	var track model.TrackInfo
 	track.ParseFullTrack(currentlyPlaying.Item)
-	log.Print(track)
+	log.Println(track)
 	service.DisplayTrackInfoTemplate(w, track)
 }
 
 func RandomTrackPlayback(w http.ResponseWriter, r *http.Request) {
-	log.Print("Playback toggled:")
+	log.Println("Playback toggled:")
 	state, err := Client.PlayerState()
 	if err != nil {
 		log.Println(err)
@@ -47,7 +47,7 @@ func RandomTrackPlayback(w http.ResponseWriter, r *http.Request) {
 }
 
 func StartStopPlayback(w http.ResponseWriter, r *http.Request) {
-	log.Print("Playback toggled:")
+	log.Println("Playback toggled:")
 	state, err := Client.PlayerState()
 	if err != nil {
 		log.Println(err)
@@ -67,27 +67,34 @@ func breakIfNoActiveDevices() bool {
 	}
 
 	if len(devices) == 0 {
-		log.Print("No active user's devices found")
+		log.Println("No user's devices found")
 		return true
 	}
-	return false
+	for _, device := range devices {
+		if device.Active {
+			log.Printf("Active device: %s", device.Name)
+			return false
+		}
+	}
+	log.Println("No active user's devices found")
+	return true
 }
 
 func togglePlaybackState(state *spotify.PlayerState) {
 	switch state.CurrentlyPlaying.Playing {
 	case true:
-		log.Print("Stop playback")
+		log.Println("Stop playback")
 		err := Client.Pause()
 		if err != nil {
 			log.Println(err)
 		}
 	case false:
-		log.Print("Start playback")
+		log.Println("Start playback")
 		err := Client.Play()
 		if err != nil {
 			log.Println(err)
 		}
 	default:
-		log.Print("Something went wrong: Playback state is neither playing nor paused.")
+		log.Println("Something went wrong: Playback state is neither playing nor paused.")
 	}
 }

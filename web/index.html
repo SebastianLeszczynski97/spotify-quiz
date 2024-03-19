@@ -49,6 +49,19 @@
                 </form>
             </div>
 
+            <div class="row">
+                <h1 class="mb-2 mt-4">Get image!</h1>
+                <form hx-post="/get-playlist-image/"  hx-target="#playlist-image">
+                    <button type="submit" class="btn btn-primary col-4">
+                        Click me
+                    </button>
+                </form>
+            <div id="playlist-image">
+                <img src="">
+            </div>
+            </div>
+
+
             <div class="col">
                 <h1 class="mb-2 mt-4">Songs/Song info:</h1>
                 <ul class="list-group fs-5 me-5" id="track-list">

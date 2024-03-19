@@ -73,3 +73,20 @@ func (track *TrackInfo) ParseFullTrack1(rawTrack *spotify.FullTrack) {
 	track.ArtistNames = artists
 	track.AlbumName = rawTrack.Album.Name
 }
+
+func (playlist *Playlist) GetImageURL(fullPlaylist spotify.FullPlaylist) string {
+	firstImageIndex := 0
+	mediumImageIndex := 1
+
+	log.Print("Processing playlist image list: ", fullPlaylist.Images)
+
+	if playlist.hasOneImage(fullPlaylist) {
+		return fullPlaylist.Images[firstImageIndex].URL
+	} else {
+		return fullPlaylist.Images[mediumImageIndex].URL
+	}
+}
+
+func (playlist *Playlist) hasOneImage(fullPlaylist spotify.FullPlaylist) bool {
+	return len(fullPlaylist.Images) == 1
+}

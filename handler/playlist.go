@@ -14,6 +14,10 @@ var playlist model.Playlist
 func init() {
 	playlist.Url = "https://open.spotify.com/playlist/5rn1uqM3yaXf15HBAJEzs4"
 	playlist.ParseId()
+	playlist.Tracks = []model.TrackInfo{
+		{Name: "Song name placeholder", ReleaseDate: "1997-05-22"},
+		{Name: "Song name placeholder2", ReleaseDate: "1997-11-11"},
+	}
 }
 
 func SetPlaylist(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +41,7 @@ func SetPlaylist(w http.ResponseWriter, r *http.Request) {
 
 func GetPlaylistSongs(w http.ResponseWriter, r *http.Request) {
 	if len(playlist.Tracks) == 0 {
-		log.Println("There are no trucks in the selected playlist")
+		log.Println("There are no tracks in the selected playlist")
 	}
 
 	service.DisplaySongsTemplate(w, playlist.Tracks)
@@ -48,5 +52,5 @@ func GetPlaylistImage(w http.ResponseWriter, r *http.Request) {
 		log.Println("Selected playlist has no images")
 	}
 
-	service.DisplayImageTemplete(w, playlist.ImageUrl)
+	service.DisplayImageTemplate(w, playlist.ImageUrl)
 }

@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/bjedrzejewsk/spotify-quiz/service"
 	"github.com/google/uuid"
 	"github.com/zmb3/spotify"
 )
@@ -18,17 +19,18 @@ func init() {
 		spotify.ScopeUserModifyPlaybackState,
 		spotify.ScopeUserReadPlaybackState,
 		spotify.ScopeUserReadPrivate)
+	IsLoggedIn = false
 }
 
 var (
-	auth   spotify.Authenticator
-	Client spotify.Client
+	auth       spotify.Authenticator
+	Client     spotify.Client
+	IsLoggedIn bool
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
 
 	sessionID := uuid.New().String()
-
 	loginURL := getURL(sha256Hash(sessionID))
 
 	expire := time.Now().Add(24 * time.Hour)
@@ -44,9 +46,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &cookie)
-	w.Header().Set("HX-Redirect", loginURL)
 
-	log.Println("Please log in to Spotify by visiting the following page in your browser:", loginURL)
+	IsLoggedIn = true
+	w.Header().Set("HX-Redirect", loginURL)
 }
 
 func Callback(w http.ResponseWriter, r *http.Request) {
@@ -67,22 +69,25 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 
 	Client = auth.NewClient(token)
 	user, err := Client.CurrentUser()
-	log.Printf("Logged as user: %s", user.DisplayName)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
+	log.Printf("Logged as user: %s", user.DisplayName)
+	IsLoggedIn = true
 	http.Redirect(w, r, os.Getenv("GO_SERVER_EXTERNAL_URL"), http.StatusSeeOther)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
 	sessionID, err := r.Cookie("htssess")
 	if err != nil {
+		log.Printf("Error: %s", err.Error())
+		IsLoggedIn = false
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		service.DisplayIndexPageTemplate(w, TemplateData{Tracks: playlist.Tracks, IsLogged: IsLoggedIn})
 		return
 	}
 
-	//Setting an expired cookie to remove from browsers
 	expire := time.Now().Add(-24 * time.Hour)
 	cookie := http.Cookie{
 		Name:    "htssess",
@@ -98,6 +103,9 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &cookie)
 
 	Client = spotify.NewClient(nil)
+	log.Printf("Logged out")
+	IsLoggedIn = false
+	service.DisplayIndexPageTemplate(w, TemplateData{Tracks: playlist.Tracks, IsLogged: IsLoggedIn})
 }
 
 func getURL(state string) string {

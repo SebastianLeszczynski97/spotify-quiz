@@ -1,0 +1,10 @@
+{{define "body"}}
+    <div class="col">
+        <h1 class="mb-2 mt-4">Log in</h1>
+        <form hx-post="/auth/login/" hx-target="#entire-body" hx-swap="outher-html">
+            <button type="submit" class="btn btn-primary col-8">
+                Log in
+            </button>
+        </form>
+    </div>
+{{end}}

@@ -32,3 +32,9 @@ func DisplaySongsTemplate(w http.ResponseWriter, tracks []model.TrackInfo) {
 		tmpl.Execute(w, tmpl)
 	}
 }
+
+func DisplayImageTemplete(w http.ResponseWriter, image string) {
+	htmlStr := fmt.Sprintf("<img src=%s></img>", image)
+	tmpl, _ := template.New("t").Parse(htmlStr)
+	tmpl.Execute(w, tmpl)
+}

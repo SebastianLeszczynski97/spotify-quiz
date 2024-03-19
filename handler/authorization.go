@@ -46,7 +46,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &cookie)
 	w.Header().Set("HX-Redirect", loginURL)
 
-	log.Print("Please log in to Spotify by visiting the following page in your browser:", loginURL)
+	log.Println("Please log in to Spotify by visiting the following page in your browser:", loginURL)
 }
 
 func Callback(w http.ResponseWriter, r *http.Request) {

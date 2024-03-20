@@ -1,31 +1,19 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 
 	"github.com/bjedrzejewsk/spotify-quiz/handler"
-	"github.com/bjedrzejewsk/spotify-quiz/model"
 )
 
 func main() {
 	log.Printf("Go app... http://localhost:8080/")
 
-	initTemplate := func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("../web/index.html"))
-		tracks := map[string][]model.TrackInfo{
-			"Tracks": {
-				{Name: "Song name placeholder", ReleaseDate: "1997-05-22"},
-				{Name: "Song name placeholder2", ReleaseDate: "1997-11-11"},
-			},
-		}
-		tmpl.Execute(w, tracks)
-	}
-
-	http.HandleFunc("/", initTemplate)
+	http.HandleFunc("/", handler.InitIndex)
 	http.HandleFunc("/get-playlist-image/", handler.GetPlaylistImage)
 	http.HandleFunc("/auth/login/", handler.Login)
+	http.HandleFunc("/auth/logout/", handler.Logout)
 	http.HandleFunc("/auth/callback/", handler.Callback)
 	http.HandleFunc("/set-playlist/", handler.SetPlaylist)
 	http.HandleFunc("/get-playlist-songs/", handler.GetPlaylistSongs)

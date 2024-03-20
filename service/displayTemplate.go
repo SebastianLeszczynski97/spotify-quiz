@@ -33,8 +33,24 @@ func DisplaySongsTemplate(w http.ResponseWriter, tracks []model.TrackInfo) {
 	}
 }
 
-func DisplayImageTemplete(w http.ResponseWriter, image string) {
+func DisplayImageTemplate(w http.ResponseWriter, image string) {
 	htmlStr := fmt.Sprintf("<img src=%s></img>", image)
 	tmpl, _ := template.New("t").Parse(htmlStr)
 	tmpl.Execute(w, tmpl)
+}
+
+func DisplayLoginPageTemplate(w http.ResponseWriter, data any) {
+	tmpl := make(map[string]*template.Template)
+	tmpl["index.html"] = template.Must(template.ParseFiles("../web/index.html", "../web/base.html"))
+	tmpl["login.html"] = template.Must(template.ParseFiles("../web/login.html", "../web/base.html"))
+
+	tmpl["login.html"].ExecuteTemplate(w, "base", data)
+}
+
+func DisplayIndexPageTemplate(w http.ResponseWriter, data any) {
+	tmpl := make(map[string]*template.Template)
+	tmpl["index.html"] = template.Must(template.ParseFiles("../web/index.html", "../web/base.html"))
+	tmpl["login.html"] = template.Must(template.ParseFiles("../web/login.html", "../web/base.html"))
+
+	tmpl["index.html"].ExecuteTemplate(w, "base", data)
 }

@@ -1,10 +1,19 @@
 {{define "body"}}
-    <div class="col">
-        <h1 class="mb-2 mt-4">Log in</h1>
-        <form hx-post="/auth/login/" hx-target="#entire-body" hx-swap="outher-html">
-            <button type="submit" class="btn btn-primary col-8">
-                Log in
-            </button>
-        </form>
+<div class="container">
+    <div class="h-25"></div>
+    <div class="row justify-content-center">
+        <div
+            class="col-md-6 bg-light rounded-3 px-3 pt-4 pb-2 shadow-sm">
+            <h1 class="text-center mb-4">Log in to get started</h1>
+            <form hx-post="/auth/login/" hx-target="#entire-body"
+                hx-swap="outer-html">
+                <div class="mb-3">
+                    <button type="submit"
+                        class="btn btn-primary btn-lg btn-block w-100">Log in</button>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
+
 {{end}}

@@ -14,16 +14,16 @@
                 <h1 class="mb-2 mt-4">Song info:</h1>
                 <ul class="list-group fs-5 me-5" id="track-info">
                     {{if .Name}}
-                        <li class='list-group-item list-group-item-secondary text-black-50'>Song name: <h4 class="text-black">{{.Name}}</h4></li>
+                        <li class='list-group-item list-group-item-secondary text-black-50'>Song name: <h3 class="text-black">{{.Name}}</h3></li>
                     {{end}}
                     {{if .ReleaseDate}}
-                        <li class='list-group-item list-group-item-secondary text-black-50'>Release date: <h4 class="text-black">{{.ReleaseDate}}</h4></li>
+                        <li class='list-group-item list-group-item-secondary text-black-50'>Release date: <h3 class="text-black">{{.ReleaseDate}}</h3></li>
                     {{end}}
                     {{if .MainArtistName}}
-                        <li class='list-group-item list-group-item-secondary text-black-50'>Artist: <h4 class="text-black">{{.MainArtistName}}</h4></li>
+                        <li class='list-group-item list-group-item-secondary text-black-50'>Artist: <h3 class="text-black">{{.MainArtistName}}</h3></li>
                     {{end}}
                     {{if .AlbumName}}
-                        <li class='list-group-item list-group-item-secondary text-black-50'>Album name: <h4 class="text-black">{{.AlbumName}}</h4></li>
+                        <li class='list-group-item list-group-item-secondary text-black-50'>Album name: <h3 class="text-black">{{.AlbumName}}</h3></li>
                     {{end}}
                 </ul>
             </div>

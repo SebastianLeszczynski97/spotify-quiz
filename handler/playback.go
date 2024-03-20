@@ -23,7 +23,7 @@ func GetCurrentTrackInfo(w http.ResponseWriter, r *http.Request) {
 	var track model.TrackInfo
 	track.SetTrackInfo(currentlyPlaying.Item)
 	log.Println(track)
-	service.DisplayTrackInfoTemplate(w, track)
+	service.DisplayTrackInfoPanelTemplate(w, track)
 }
 
 func RandomTrackPlayback(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +43,14 @@ func RandomTrackPlayback(w http.ResponseWriter, r *http.Request) {
 	offset := spotify.PlaybackOffset{Position: rand.Intn(len(playlist.Tracks))}
 	playbackOptions := spotify.PlayOptions{PlaybackContext: &uri, PlaybackOffset: &offset}
 	Client.PlayOpt(&playbackOptions)
+	dummyTrack := model.TrackInfo{
+		ImageUrl:    "https://th.bing.com/th/id/OIG1.lFSmScQIgKiQyHVQ0.8o?pid=ImgGn",
+		Name:        "",
+		ReleaseDate: "",
+		AlbumName:   "",
+	}
 
+	service.DisplayTrackInfoPanelTemplate(w, dummyTrack)
 }
 
 func StartStopPlayback(w http.ResponseWriter, r *http.Request) {

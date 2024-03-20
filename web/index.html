@@ -32,6 +32,24 @@
     </div>
     <div class="col-1"></div>
     <div class="col-5">
+        <div class="row">
+            <h1 class="mb-2 mt-4 fw-lighter">Check out Playlist Songs</h1>
+            <form hx-post="/get-playlist-songs/" hx-target="#track-list">
+                <button type="submit" class="btn btn-outline-primary col-8">
+                    Click me
+                </button>
+            </form>
+        </div>
+
+        <div class="col">
+            <h1 class="mb-2 mt-4 fw-lighter">Playlist songs:</h1>
+            <ul class="list-group fs-5 me-5" id="track-list">
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-5">
         <div class="col">
             <h1 class="mb-2 mt-4">Start the Quiz!</h1>
             <form hx-post="/quiz/" hx-target="#full-page">
@@ -41,27 +59,8 @@
             </form>
         </div>
     </div>
-
-    <div class="col-5">
-        <div class="row">
-            <h1 class="mb-2 mt-4">Check out Playlist Songs</h1>
-            <form hx-post="/get-playlist-songs/" hx-target="#track-list">
-                <button type="submit" class="btn btn-primary col-4">
-                    Click me
-                </button>
-            </form>
-        </div>
-
-        <div class="col">
-            <h1 class="mb-2 mt-4">Playlist songs:</h1>
-            <ul class="list-group fs-5 me-5" id="track-list">
-                {{ range .Tracks }}
-                <li class="list-group-item bg-primary text-white">{{
-                    .ReleaseDate }} {{ .Name }}</li>
-                {{ end }}
-            </ul>
-        </div>
-    </div>
+    
     <div class="col-1"></div>
 </div>
 {{end}}
+<li class='list-group-item-'></li>

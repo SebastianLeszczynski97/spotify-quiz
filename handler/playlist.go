@@ -18,6 +18,7 @@ func init() {
 		{Name: "Song name placeholder", ReleaseDate: "1997-05-22"},
 		{Name: "Song name placeholder2", ReleaseDate: "1997-11-11"},
 	}
+	playlist.ImageUrl = ""
 }
 
 func SetPlaylist(w http.ResponseWriter, r *http.Request) {
@@ -34,9 +35,10 @@ func SetPlaylist(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	playlist.SetImageURL(fullPlaylist)
+	playlist.SetPlaylistImageURL(fullPlaylist)
 
 	log.Printf("Playlist added %s", playlist)
+	service.DisplayPlaylistImageTemplate(w, playlist.ImageUrl)
 }
 
 func GetPlaylistSongs(w http.ResponseWriter, r *http.Request) {
@@ -52,5 +54,5 @@ func GetPlaylistImage(w http.ResponseWriter, r *http.Request) {
 		log.Println("Selected playlist has no images")
 	}
 
-	service.DisplayImageTemplate(w, playlist.ImageUrl)
+	service.DisplayPlaylistImageTemplate(w, playlist.ImageUrl)
 }

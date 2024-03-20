@@ -21,7 +21,7 @@ func GetCurrentTrackInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var track model.TrackInfo
-	track.ParseFullTrack(currentlyPlaying.Item)
+	track.SetTrackInfo(currentlyPlaying.Item)
 	log.Println(track)
 	service.DisplayTrackInfoTemplate(w, track)
 }

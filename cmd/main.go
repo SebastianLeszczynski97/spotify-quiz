@@ -11,6 +11,7 @@ func main() {
 	log.Printf("Go app... http://localhost:8080/")
 
 	http.HandleFunc("/", handler.InitIndex)
+	http.HandleFunc("/quiz/", handler.InitQuiz)
 	http.HandleFunc("/get-playlist-image/", handler.GetPlaylistImage)
 	http.HandleFunc("/auth/login/", handler.Login)
 	http.HandleFunc("/auth/logout/", handler.Logout)

@@ -1,24 +1,50 @@
 <!DOCTYPE html>
 {{define "body"}}
 <div class="row mt-4 g-4">
-    {{if .IsLogged}}
     <div class="row">
-        <h1 class="mb-2 mt-4">Add Your Playlist</h1>
-        <form hx-post="/set-playlist/" hx-swap="none">
-            <div class="mb-2">
-                <label for="playlist-link">Playlist</label>
-                <input type="text" name="input-playlist" id="playlist-link"
-                    class="form-control" />
+        <div class="col-1 d-flex text-end align-items-end mb-3">
+            <div id="playlist-image">
+                {{if .PlaylistImageUrl}}
+                    <img
+                    src="https://th.bing.com/th/id/OIG1.lFSmScQIgKiQyHVQ0.8o?pid=ImgGn"
+                    class="img-fluid rounded-3 shadow"
+                    alt="playlist or placeholder image">
+                {{else}}
+
+                {{end}}
+
             </div>
-            <button type="submit" class="btn btn-primary col-12">
-                Submit
-            </button>
-        </form>
+        </div>
+        <div class="col">
+            <h1 class="mb-2 mt-4">Add Your Playlist</h1>
+            <form hx-post="/set-playlist/" hx-target="#playlist-image">
+                <div class="mb-2">
+                    <label for="playlist-link">Playlist</label>
+                    <input type="text" name="input-playlist" id="playlist-link"
+                        class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary col-12">
+                    Select the Playlist for Your Quiz
+                </button>
+            </form>
+        </div>
+
+    </div>
+    <div class="col-1"></div>
+    <div class="col-5">
+        <div class="col">
+            <h1 class="mb-2 mt-4">Start the Quiz!</h1>
+            <form hx-post="/quiz/" hx-target="#full-page">
+                <button type="submit" class="btn btn-primary col-8">
+                    Start the quiz
+                </button>
+            </form>
+        </div>
     </div>
 
-    <div class="col-6">
+    <div class="col-5">
         <div class="row">
-            <h1 class="mb-2 mt-4">Get Playlist Songs!</h1>
+            <h1 class="mb-2 mt-4">Check out Playlist Songs</h1>
             <form hx-post="/get-playlist-songs/" hx-target="#track-list">
                 <button type="submit" class="btn btn-primary col-4">
                     Click me
@@ -26,29 +52,8 @@
             </form>
         </div>
 
-        <div class="row">
-            <h1 class="mb-2 mt-4">Get the song info</h1>
-            <form hx-post="/get-current-track-info/" hx-target="#track-list">
-                <button type="submit" class="btn btn-primary col-4">
-                    Click me
-                </button>
-            </form>
-        </div>
-
-        <div class="row">
-            <h1 class="mb-2 mt-4">Get image!</h1>
-            <form hx-post="/get-playlist-image/" hx-target="#playlist-image">
-                <button type="submit" class="btn btn-primary col-4">
-                    Click me
-                </button>
-            </form>
-            <div id="playlist-image">
-                <img src>
-            </div>
-        </div>
-
         <div class="col">
-            <h1 class="mb-2 mt-4">Songs/Song info:</h1>
+            <h1 class="mb-2 mt-4">Playlist songs:</h1>
             <ul class="list-group fs-5 me-5" id="track-list">
                 {{ range .Tracks }}
                 <li class="list-group-item bg-primary text-white">{{
@@ -57,46 +62,6 @@
             </ul>
         </div>
     </div>
-
-    <div class="col-6">
-        <div class="row">
-            <div class="col">
-                <h1 class="mb-2 mt-4">Play playback!</h1>
-                <form hx-post="/start-playback/" hx-swap="none">
-                    <button type="submit" class="btn btn-primary col-8">
-                        Click me
-                    </button>
-                </form>
-            </div>
-
-            <div class="col">
-                <h1 class="mb-2 mt-4">Log out</h1>
-                <form hx-post="/auth/logout/" hx-target="#full-page" hx-swap="outher-html">
-                    <button type="submit" class="btn btn-primary col-8">
-                        Log out
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="row">
-            <h1 class="mb-2 mt-4">Play random playlist song!</h1>
-            <form hx-post="/random-track-playback/" hx-swap="none">
-                <button type="submit" class="btn btn-primary col-4">
-                    Click me
-                </button>
-            </form>
-        </div>
-    </div>
-    {{else}}
-    <div class="col">
-        <h1 class="mb-2 mt-4">Log in</h1>
-        <form hx-post="/auth/login/" hx-swap="none">
-            <button type="submit" class="btn btn-primary col-8">
-                Log in to contiune
-            </button>
-        </form>
-    </div>
-    {{end}}
+    <div class="col-1"></div>
 </div>
 {{end}}

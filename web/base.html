@@ -26,16 +26,19 @@
                 <i class="bi bi-music-note mx-1"></i><b>What's the
                     melody?</b></button>
             <ul class="navbar-nav ms-auto mx-4">
-                <li class="nav-item">
-                    <button class="nav-link" hx-post="/auth/login"
-                        hx-target="#entire-body"><i
-                            class="bi bi-box-arrow-in-right mx-1"></i>Login</button>
-                </li>
+                {{if .IsLogged}}
                 <li class="nav-item">
                     <button class="nav-link" hx-post="/auth/logout"
                         hx-target="#full-page"><i
-                            class="bi bi-door-closed mx-1"></i>Logout</button>
+                            class="bi bi-box-arrow-in-right mx-1"></i>Logout</button>
                 </li>
+                {{else}}
+                <li class="nav-item">
+                    <button class="nav-link" hx-post="/auth/login"
+                        hx-target="#entire-body"><i
+                            class="bi bi-person-check-fill mx-1"></i>Login</button>
+                </li>
+                {{end}}
             </ul>
         </nav>
 

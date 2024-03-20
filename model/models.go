@@ -14,6 +14,7 @@ type TrackInfo struct {
 	MainArtistName string
 	ArtistNames    []string
 	AlbumName      string
+	ImageUrl       string
 }
 
 type Playlist struct {
@@ -36,13 +37,13 @@ func (playlist *Playlist) SetTracks(rawTracks *spotify.PlaylistTrackPage) {
 	var tracks []TrackInfo
 	for _, fullTrack := range rawTracks.Tracks {
 		track := TrackInfo{}
-		track.ParseFullTrack(&fullTrack.Track)
+		track.SetTrackInfo(&fullTrack.Track)
 		tracks = append(tracks, track)
 	}
 	playlist.Tracks = tracks
 }
 
-func (playlist *Playlist) SetImageURL(fullPlaylist *spotify.FullPlaylist) {
+func (playlist *Playlist) SetPlaylistImageURL(fullPlaylist *spotify.FullPlaylist) {
 	if hasNoImage(fullPlaylist) {
 		log.Println("Playlist has no images")
 		return
@@ -67,7 +68,7 @@ func hasOneImage(fullPlaylist *spotify.FullPlaylist) bool {
 	return len(fullPlaylist.Images) == 1
 }
 
-func (track *TrackInfo) ParseFullTrack(rawTrack *spotify.FullTrack) {
+func (track *TrackInfo) SetTrackInfo(rawTrack *spotify.FullTrack) {
 	track.Name = rawTrack.Name
 	track.ReleaseDate = rawTrack.Album.ReleaseDate
 	var artists []string
@@ -79,4 +80,5 @@ func (track *TrackInfo) ParseFullTrack(rawTrack *spotify.FullTrack) {
 	}
 	track.ArtistNames = artists
 	track.AlbumName = rawTrack.Album.Name
+	track.ImageUrl = rawTrack.Album.Images[0].URL
 }

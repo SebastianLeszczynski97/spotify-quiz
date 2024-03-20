@@ -10,7 +10,7 @@ import (
 
 func DisplaySongsTemplate(w http.ResponseWriter, tracks []model.TrackInfo) {
 	for _, item := range tracks {
-		htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s %s</li>", item.ReleaseDate, item.Name)
+		htmlStr := fmt.Sprintf("<li class='list-group-item'>%s %s</li>", item.ReleaseDate, item.Name)
 		tmpl, _ := template.New("t").Parse(htmlStr)
 		tmpl.Execute(w, tmpl)
 	}

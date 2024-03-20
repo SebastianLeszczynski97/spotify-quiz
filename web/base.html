@@ -15,9 +15,33 @@
         <script src="https://unpkg.com/htmx.org@1.9.2"
             integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h"
             crossorigin="anonymous"></script>
-        </head>
-    <body class="container" id="entire-body">
-        {{template "body" .}}
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    </head>
+    <body id="full-page">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+            <button
+                class="bg-lightblue mb-2 mt-2 mx-2 px-4 py-2 btn w-200 "
+                hx-post="/" hx-target="#full-page">
+                <i class="bi bi-music-note mx-1"></i><b>What's the
+                    melody?</b></button>
+            <ul class="navbar-nav ms-auto mx-4">
+                <li class="nav-item">
+                    <button class="nav-link" hx-post="/auth/login"
+                        hx-target="#entire-body"><i
+                            class="bi bi-box-arrow-in-right mx-1"></i>Login</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" hx-post="/auth/logout"
+                        hx-target="#full-page"><i
+                            class="bi bi-door-closed mx-1"></i>Logout</button>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="container" id="entire-body">
+            {{template "body" .}}
+        </div>
     </body>
 </html>
 {{end}}

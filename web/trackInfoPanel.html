@@ -1,5 +1,32 @@
     <div class="col-8">
-        <img src="{{.ImageUrl}}" class="img-fluid rounded-5 shadow" alt="album or placeholder image">
+        <img src="{{.ImageUrl}}" class="img-fluid rounded-5 shadow  mb-4" alt="album or placeholder image">
+
+        <div class="mt-4 d-flex justify-content-center">
+            <div>
+                <button type="submit" class="col btn rounded-circle shadow" style="padding: 0.5rem;" 
+                    hx-post="/get-current-track-info/" hx-target="#panel">
+
+                    <i class="bi bi-info" style="font-size: 3em;"></i>
+                </button>
+
+                <button type="submit" class="col btn rounded-circle shadow" style="padding: 0.5rem;"
+                    hx-post="/start-playback/" hx-swap="none" x-show="! playing" @click="playing = ! playing">
+
+                    <i class="bi bi-play-fill" style="font-size: 3em"></i>
+                </button>
+                <button type="submit" class="col btn rounded-circle shadow" style="padding: 0.5rem;"
+                    hx-post="/start-playback/" hx-swap="none" x-show="playing" @click="playing = ! playing">
+
+                    <i class="bi bi-pause-fill" style="font-size: 3em"></i>
+                </button>
+
+                <button type="submit" class="col btn rounded-circle shadow" style="padding: 0.75rem;"
+                    hx-post="/random-track-playback/" hx-target="#panel" @click="playing">
+                    
+                    <i class="bi bi-skip-end-fill" style="font-size: 2.5em"></i>
+                </button>
+            </div>
+        </div>
     </div>
     <div class="col mx-4">
         <div class="row">

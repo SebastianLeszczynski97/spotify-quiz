@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/bjedrzejewsk/spotify-quiz/model"
@@ -11,6 +12,7 @@ type TemplateData struct {
 	Tracks           []model.TrackInfo
 	IsLogged         bool
 	PlaylistImageUrl string
+	IsPlaying        bool
 }
 
 func InitIndex(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +34,11 @@ func InitQuiz(w http.ResponseWriter, r *http.Request) {
 		IsLogged: IsLoggedIn,
 	}
 	if IsLoggedIn {
+		state, err := Client.PlayerState()
+		if err != nil {
+			log.Println(err)
+		}
+		Data.IsPlaying = state.CurrentlyPlaying.Playing
 		service.DisplayQuizPageTemplate(w, Data)
 	} else {
 		service.DisplayLoginPageTemplate(w, Data)

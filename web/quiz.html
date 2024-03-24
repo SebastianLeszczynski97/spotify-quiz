@@ -1,10 +1,10 @@
 {{define "body"}}
-<div class="row mt-5 g-4">
+<div class="row mt-5 g-4" x-data="{ playing: {{.IsPlaying}} }">
     <div class="col">
         <div class="row">
             <div class="col">
                 <h1 class="mb-2 mt-4">Play playback!</h1>
-                <form hx-post="/start-playback/" hx-swap="none">
+                <form hx-post="/start-playback/" hx-swap="none" @click="playing = ! playing">
                     <button type="submit" class="btn btn-primary col-8">
                         Click me
                     </button>
@@ -24,7 +24,34 @@
     <div class="col-9" >
         <div class="row" id="panel">
             <div class="col-8">
-                <img src="https://th.bing.com/th/id/OIG1.lFSmScQIgKiQyHVQ0.8o?pid=ImgGn" class="img-fluid rounded-5 shadow" alt="album or placeholder image">
+                <img src="https://th.bing.com/th/id/OIG1.lFSmScQIgKiQyHVQ0.8o?pid=ImgGn" class="img-fluid rounded-5 shadow mb-4" alt="album or placeholder image">
+
+                <div class="mt-4 d-flex justify-content-center">
+                        <div>
+                                <button type="submit" class="col btn rounded-circle shadow" style="padding: 0.5rem;" 
+                                    hx-post="/get-current-track-info/" hx-target="#panel">
+
+                                    <i class="bi bi-info" style="font-size: 3em;"></i>
+                                </button>
+
+                                <button type="submit" class="col btn rounded-circle shadow" style="padding: 0.5rem;"
+                                    hx-post="/start-playback/" hx-swap="none" x-show="! playing" @click="playing = ! playing">
+
+                                    <i class="bi bi-play-fill" style="font-size: 3em"></i>
+                                </button>
+                                <button type="submit" class="col btn rounded-circle shadow" style="padding: 0.5rem;"
+                                    hx-post="/start-playback/" hx-swap="none" x-show="playing" @click="playing = ! playing">
+
+                                    <i class="bi bi-pause-fill" style="font-size: 3em"></i>
+                                </button>
+
+                                <button type="submit" class="col btn rounded-circle shadow" style="padding: 0.75rem;"
+                                    hx-post="/random-track-playback/" hx-target="#panel" @click="playing">
+
+                                    <i class="bi bi-skip-end-fill" style="font-size: 2.5em"></i>
+                                </button>
+                        </div>
+                </div>
             </div>
             <div class="col mx-4">
                 <div class="row">
@@ -44,25 +71,7 @@
             </div>
         </div>
     </div>
-    <div class="mt-4 d-flex justify-content-center">
-        <div class="btn-group">
-            <button type="submit" class="btn btn-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-skip-start-fill" viewBox="0 0 16 16">
-                    <path d="M4 4a.5.5 0 0 1 1 0v3.248l6.267-3.636c.54-.313 1.232.066 1.232.696v7.384c0 .63-.692 1.01-1.232.697L5 8.753V12a.5.5 0 0 1-1 0z"/>
-                  </svg>
-            </button>
-            <button type="submit" class="btn btn-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"></path>
-                  </svg>
-            </button>
-            <button type="submit" class="btn btn-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-skip-end-fill" viewBox="0 0 16 16">
-                    <path d="M12.5 4a.5.5 0 0 0-1 0v3.248L5.233 3.612C4.693 3.3 4 3.678 4 4.308v7.384c0 .63.692 1.01 1.233.697L11.5 8.753V12a.5.5 0 0 0 1 0z"/>
-                  </svg>
-            </button>
-        </div>
-    </div>
+
 </div>
 
 {{end}}

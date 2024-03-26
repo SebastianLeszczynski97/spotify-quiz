@@ -2,22 +2,10 @@
 <div class="row mt-5 g-4" x-data="{ playing: {{.IsPlaying}} }">
     <div class="col">
         <div class="row">
-            <div class="col">
-                <h1 class="mb-2 mt-4">Play playback!</h1>
-                <form hx-post="/start-playback/" hx-swap="none" @click="playing = ! playing">
-                    <button type="submit" class="btn btn-primary col-8">
-                        Click me
+            <form hx-post="/random-track-playback/" hx-target="#panel"  @click="playing = true">
+                <button type="submit" class="btn btn-dark btn-lg col-10">
+                    PLAY MYSTERIOUS SONG!
                     </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="row">
-            <h1 class="mb-2 mt-4">Play random song!</h1>
-            <form hx-post="/random-track-playback/" hx-target="#panel">
-                <button type="submit" class="btn btn-primary col-8">
-                    Click me
-                </button>
             </form>
         </div>
     </div>
@@ -53,17 +41,15 @@
                         </div>
                 </div>
             </div>
-            <div class="col mx-4">
+            <div class="col mt-4 mx-4">
                 <div class="row">
-                    <h1 class="mb-2 mt-4">Get song info</h1>
                     <form hx-post="/get-current-track-info/" hx-target="#panel">
-                        <button type="submit" class="btn btn-primary col-10">
-                            Click me
+                        <button type="submit" class="btn btn-dark btn-lg col-10">
+                        REVEAL SONG!
                         </button>
                     </form>
                 </div>
                 <div class="row">
-                        <h1 class="mb-2 mt-4">Song info:</h1>
                         <ul class="list-group fs-5 me-5" id="track-info">
                         </ul>
                     </div>

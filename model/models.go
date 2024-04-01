@@ -2,6 +2,7 @@ package model
 
 import (
 	"log"
+	"math/rand"
 	"net/url"
 	"strings"
 
@@ -18,10 +19,12 @@ type TrackInfo struct {
 }
 
 type Playlist struct {
-	Url      string
-	Id       string
-	Tracks   []TrackInfo
-	ImageUrl string
+	Url            string
+	Id             string
+	Tracks         []TrackInfo
+	ImageUrl       string
+	TrackIndexes   []int
+	LastTrackIndex int
 }
 
 func (playlist *Playlist) ParseId() {
@@ -33,14 +36,41 @@ func (playlist *Playlist) ParseId() {
 	playlist.Id = t[len(t)-1]
 }
 
-func (playlist *Playlist) SetTracks(rawTracks *spotify.PlaylistTrackPage) {
+func (playlist *Playlist) SetUnusedIndexes() {
+	indexes := make([]int, len(playlist.Tracks))
+	for i := range indexes {
+		indexes[i] = i
+	}
+	rand.Shuffle(len(indexes), func(i, j int) {
+		indexes[i], indexes[j] = indexes[j], indexes[i]
+	})
+	playlist.TrackIndexes = indexes
+}
+
+func (playlist *Playlist) SetTracks(rawTracks []spotify.PlaylistTrack) {
+
 	var tracks []TrackInfo
-	for _, fullTrack := range rawTracks.Tracks {
+	for _, fullTrack := range rawTracks {
 		track := TrackInfo{}
 		track.SetTrackInfo(&fullTrack.Track)
 		tracks = append(tracks, track)
 	}
 	playlist.Tracks = tracks
+}
+
+func (playlist *Playlist) GetPlaybackOptions() spotify.PlayOptions {
+	uri := "spotify:playlist:" + spotify.URI(playlist.Id)
+	offset := spotify.PlaybackOffset{Position: int(playlist.TrackIndexes[playlist.LastTrackIndex])}
+	playbackOptions := spotify.PlayOptions{PlaybackContext: &uri, PlaybackOffset: &offset}
+	playlist.IncrementTrackIndex()
+	return playbackOptions
+}
+
+func (playlist *Playlist) IncrementTrackIndex() {
+	if playlist.LastTrackIndex == (len(playlist.TrackIndexes) - 1) {
+		playlist.LastTrackIndex = 0
+	}
+	playlist.LastTrackIndex++
 }
 
 func (playlist *Playlist) SetPlaylistImageURL(fullPlaylist *spotify.FullPlaylist) {

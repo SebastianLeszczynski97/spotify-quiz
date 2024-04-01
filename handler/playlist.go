@@ -32,20 +32,15 @@ func SetPlaylist(w http.ResponseWriter, r *http.Request) {
 	var rawTracks []spotify.PlaylistTrack
 	if response.Total > 0 {
 		for i := 0; i < response.Total; i = i + 100 {
-
 			responceTracks, err := Client.GetPlaylistTracksOpt(spotify.ID(playlist.Id), &spotify.Options{Offset: &i}, "")
 			if err != nil {
 				log.Println(err)
 			}
 			rawTracks = append(rawTracks, responceTracks.Tracks...)
 		}
-
 	}
-
-	log.Printf("Ile jest?: %v", len(playlist.Tracks))
 	playlist.SetTracks(rawTracks)
 	playlist.SetUnusedIndexes()
-	log.Printf("Ile jest?: %v", len(playlist.Tracks))
 	fullPlaylist, err := Client.GetPlaylist(spotify.ID(playlist.Id))
 	if err != nil {
 		log.Println(err)

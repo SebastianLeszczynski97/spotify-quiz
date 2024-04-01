@@ -19,25 +19,40 @@ func init() {
 		{Name: "Song name placeholder2", ReleaseDate: "1997-11-11"},
 	}
 	playlist.ImageUrl = ""
+	playlist.LastTrackIndex = 0
 }
 
 func SetPlaylist(w http.ResponseWriter, r *http.Request) {
 	playlist.Url = r.PostFormValue("input-playlist")
 	playlist.ParseId()
-
-	rawTracks, err := Client.GetPlaylistTracks(spotify.ID(playlist.Id))
+	response, err := Client.GetPlaylistTracks(spotify.ID(playlist.Id))
 	if err != nil {
 		log.Println(err)
 	}
-	playlist.SetTracks(rawTracks)
+	var rawTracks []spotify.PlaylistTrack
+	if response.Total > 0 {
+		for i := 0; i < response.Total; i = i + 100 {
 
+			responceTracks, err := Client.GetPlaylistTracksOpt(spotify.ID(playlist.Id), &spotify.Options{Offset: &i}, "")
+			if err != nil {
+				log.Println(err)
+			}
+			rawTracks = append(rawTracks, responceTracks.Tracks...)
+		}
+
+	}
+
+	log.Printf("Ile jest?: %v", len(playlist.Tracks))
+	playlist.SetTracks(rawTracks)
+	playlist.SetUnusedIndexes()
+	log.Printf("Ile jest?: %v", len(playlist.Tracks))
 	fullPlaylist, err := Client.GetPlaylist(spotify.ID(playlist.Id))
 	if err != nil {
 		log.Println(err)
 	}
 	playlist.SetPlaylistImageURL(fullPlaylist)
 
-	log.Printf("Playlist added %s", playlist)
+	log.Printf("Playlist added %v", playlist)
 	service.DisplayPlaylistImageTemplate(w, playlist.ImageUrl)
 }
 

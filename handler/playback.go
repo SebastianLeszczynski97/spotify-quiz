@@ -2,13 +2,23 @@ package handler
 
 import (
 	"log"
-	"math/rand"
 	"net/http"
 
 	"github.com/bjedrzejewsk/spotify-quiz/model"
 	"github.com/bjedrzejewsk/spotify-quiz/service"
 	"github.com/zmb3/spotify"
 )
+
+var dummyTrackInfo model.TrackInfo
+
+func init() {
+	dummyTrackInfo = model.TrackInfo{
+		ImageUrl:    "https://th.bing.com/th/id/OIG1.lFSmScQIgKiQyHVQ0.8o?pid=ImgGn",
+		Name:        "",
+		ReleaseDate: "",
+		AlbumName:   "",
+	}
+}
 
 func GetCurrentTrackInfo(w http.ResponseWriter, r *http.Request) {
 	log.Println("Getting currently playing song info:")
@@ -39,18 +49,10 @@ func RandomTrackPlayback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	uri := "spotify:playlist:" + spotify.URI(playlist.Id)
-	offset := spotify.PlaybackOffset{Position: rand.Intn(len(playlist.Tracks))}
-	playbackOptions := spotify.PlayOptions{PlaybackContext: &uri, PlaybackOffset: &offset}
+	playbackOptions := playlist.GetPlaybackOptions()
 	Client.PlayOpt(&playbackOptions)
-	dummyTrack := model.TrackInfo{
-		ImageUrl:    "https://th.bing.com/th/id/OIG1.lFSmScQIgKiQyHVQ0.8o?pid=ImgGn",
-		Name:        "",
-		ReleaseDate: "",
-		AlbumName:   "",
-	}
 
-	service.DisplayTrackInfoPanelTemplate(w, dummyTrack)
+	service.DisplayTrackInfoPanelTemplate(w, dummyTrackInfo)
 }
 
 func StartStopPlayback(w http.ResponseWriter, r *http.Request) {

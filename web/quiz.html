@@ -1,7 +1,7 @@
 {{define "body"}}
 <div class="row mt-5 g-4" x-data="{ playing: {{.IsPlaying}} }">
     <div class="col">
-        <div class="row">
+        <div class="row mt-4">
             <form hx-post="/random-track-playback/" hx-target="#panel"  @click="playing = true">
                 <button type="submit" class="btn btn-dark btn-lg col-10">
                     PLAY MYSTERIOUS SONG!

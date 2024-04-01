@@ -23,20 +23,20 @@
                     <input type="text" name="input-playlist" id="playlist-link"
                         class="form-control" />
                 </div>
-                <button type="submit" class="btn btn-primary col-12">
+                <button type="submit" class="btn btn-primary col-12 shadow">
                     Select the Playlist for Your Quiz
                 </button>
             </form>
         </div>
-
+        <div class="col-1"></div>
     </div>
     <div class="col-1"></div>
     <div class="col-5">
-        <div class="row">
+        <div class="row">   
             <h1 class="mb-2 mt-4 fw-lighter">Check out Playlist Songs</h1>
             <form hx-post="/get-playlist-songs/" hx-target="#track-list">
-                <button type="submit" class="btn btn-outline-primary col-8">
-                    Click me
+                <button type="submit" class="btn btn-outline-primary col-8 shadow">
+                    Check the songs
                 </button>
             </form>
         </div>
@@ -53,7 +53,7 @@
         <div class="col">
             <h1 class="mb-2 mt-4">Start the Quiz!</h1>
             <form hx-post="/quiz/" hx-target="#full-page">
-                <button type="submit" class="btn btn-primary col-8">
+                <button type="submit" class="btn btn-primary col-8 shadow">
                     Start the quiz
                 </button>
             </form>
@@ -63,4 +63,3 @@
     <div class="col-1"></div>
 </div>
 {{end}}
-<li class='list-group-item-'></li>
